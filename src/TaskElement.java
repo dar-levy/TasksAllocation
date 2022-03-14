@@ -21,6 +21,9 @@ public class TaskElement {
 	 */
 	public TaskElement(Task t){
 		//Your code comes here
+		this.t = t;
+		this.prev = null;
+		this.next = null;
 	}
 	
 	public String toString(){
