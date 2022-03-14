@@ -33,8 +33,7 @@ public class Task {
 		//Your code comes here
 		return 0;
 	}
-	
-	
+
 	public String toString(){
 		return "task: " + this.name + ", priority: " + this.priority;
 	}
