@@ -34,6 +34,10 @@ public class Task {
 		return 0;
 	}
 
+	private boolean isBigger(Task other) {
+		return this.priority > other.priority;
+	}
+
 	public String toString(){
 		return "task: " + this.name + ", priority: " + this.priority;
 	}
