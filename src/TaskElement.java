@@ -8,8 +8,8 @@
  */
 public class TaskElement {
 
-	TaskElement next; //the task element which comes after this in the linked list, null if this element is last.
 	TaskElement prev; //the task element which comes before this in the linked list, null if this element is first.
+	TaskElement next; //the task element which comes after this in the linked list, null if this element is last.
 	int heapIndex; //the index of this element in the heap (implemented as an array).
 	Task t;
 	
