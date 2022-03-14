@@ -30,7 +30,10 @@ public class Task {
 	 * @return a negative/positive or zero number of this task is smaller/greater or equal to other
 	 */
 	public int compareTo(Task other) {
-		//Your code comes here
+		if (isBigger(other))
+			return 1;
+		else if (isSmaller(other))
+			return -1;
 		return 0;
 	}
 
