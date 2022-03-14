@@ -34,7 +34,7 @@ public class Task {
 			return 1;
 		else if (isSmaller(other))
 			return -1;
-		return 0;
+		return isEqual(other);
 	}
 
 	private boolean isBigger(Task other) {
@@ -43,6 +43,10 @@ public class Task {
 
 	private boolean isSmaller(Task other) {
 		return this.priority < other.priority;
+	}
+
+	private int isEqual(Task other) {
+		return this.name.compareTo(other.name);
 	}
 
 	public String toString(){
