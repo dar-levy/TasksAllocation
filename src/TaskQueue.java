@@ -25,7 +25,12 @@ public class TaskQueue {
 	 * @return the first element in the queue
 	 */
 	public TaskElement dequeue(){
-		//Your code comes here
+		if (first != null){
+			TaskElement firstPreviousNode = first.prev;
+			TaskElement temporaryFirst = first;
+			first = firstPreviousNode;
+			return temporaryFirst;
+		}
 		return null;
 	}
 	
@@ -36,7 +41,7 @@ public class TaskQueue {
 	 */
 	public TaskElement peek(){
 		//Your code comes here
-		return null;
+		return first;
 	}
 	
 	/**
@@ -46,6 +51,15 @@ public class TaskQueue {
 	 */
 	public void enqueue(TaskElement node){
 		//Your code comes here
+		if (last == null){
+			last = node;
+			node.next = first;
+		}
+		else {
+			TaskElement temporaryLast = last;
+			temporaryLast.prev = node;
+			last = node;
+		}
 	}
 	
 	/**
