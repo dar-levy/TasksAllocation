@@ -9,7 +9,7 @@
  */
 public class TaskAllocation{
 
-	/*
+	/**
 	 * The heap and queue which compose the data structure.
 	 * The most important thing to observe is:
 	 * 	A TaskElement exists in the queue if and only if it also exists in the heap.

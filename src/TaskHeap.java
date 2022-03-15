@@ -12,7 +12,7 @@
 public class TaskHeap{
 
 	public static int capacity=200; // the maximum number of elements in the heap
-	/*
+	/**
 	 * The array in which the elements are kept according to the heap order.
 	 * The following must always hold true:
 	 * 			if i < size then heap[i].heapIndex == i
