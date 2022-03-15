@@ -21,7 +21,8 @@ public class TaskAllocation{
 	 * Creates an empty task allocation queue
 	 */
 	public TaskAllocation(){
-		//Your code comes here
+		this.heap = new TaskHeap();
+		this.q = new TaskQueue();
 	}
 	
 	

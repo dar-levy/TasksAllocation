@@ -36,7 +36,7 @@ public class TaskQueue {
 	 */
 	public TaskElement peek(){
 		//Your code comes here
-		return null;
+		return first;
 	}
 	
 	/**
@@ -46,6 +46,9 @@ public class TaskQueue {
 	 */
 	public void enqueue(TaskElement node){
 		//Your code comes here
+		if (last == null){
+
+		}
 	}
 	
 	/**
