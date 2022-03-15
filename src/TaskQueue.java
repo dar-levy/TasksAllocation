@@ -25,7 +25,12 @@ public class TaskQueue {
 	 * @return the first element in the queue
 	 */
 	public TaskElement dequeue(){
-		//Your code comes here
+		if (first != null){
+			TaskElement firstPreviousNode = first.prev;
+			TaskElement temporaryFirst = first;
+			first = firstPreviousNode;
+			return temporaryFirst;
+		}
 		return null;
 	}
 	
