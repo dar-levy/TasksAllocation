@@ -25,7 +25,7 @@ public class TaskHeap{
 	 */
 	public TaskHeap(){
 		//Your code comes here
-
+		heap = new TaskElement[]{};
 	}
 	
 	/**
