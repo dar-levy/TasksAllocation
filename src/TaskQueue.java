@@ -52,7 +52,13 @@ public class TaskQueue {
 	public void enqueue(TaskElement node){
 		//Your code comes here
 		if (last == null){
-
+			last = node;
+			node.next = first;
+		}
+		else {
+			TaskElement temporaryLast = last;
+			temporaryLast.prev = node;
+			last = node;
 		}
 	}
 	
