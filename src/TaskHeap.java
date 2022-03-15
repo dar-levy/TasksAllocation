@@ -26,6 +26,7 @@ public class TaskHeap{
 	public TaskHeap(){
 		//Your code comes here
 		heap = new TaskElement[]{};
+		size = 0;
 	}
 	
 	/**
@@ -47,8 +48,7 @@ public class TaskHeap{
      * @return the size of the heap
      */
     public int size(){
-		//Your code comes here
-		return 0;
+		return size;
     }
     
     /**
