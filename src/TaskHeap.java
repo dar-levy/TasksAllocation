@@ -39,7 +39,9 @@ public class TaskHeap{
 	 */
 	public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
+		for (int i = 0; i < arr.length; i++){
 
+		}
 	}
 	
     /**
