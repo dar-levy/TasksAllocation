@@ -96,21 +96,32 @@ public class TaskHeap{
         //Your code comes here
     }
     
-    private void percolateDown(TaskElement newTask) {
-		for (int i = 0; i < size; i++){
-			if (heap[2*i] != null && heap[2*i + 1] != null) { // TODO: Consider using 2*i<size instead of current
-				if (heap[2*i].t.priority >= heap[2*i+1].t.priority) { // FIXME: Compare between tasks using task.compareTo(anotherTask)
-					assignNewTaskToIndex(newTask, i, 2*i);
+    private void percolateDown(TaskElement newTask) { // FIXME: Must consider replacing head with newTask
+		TaskElement maxTask = heap[0];
+		TaskElement untidyTaskElement = maxTask.t.priority >= newTask.t.priority ? newTask : maxTask;
+		if (isHeapEmpty()){
+			heap[0] = newTask;
+		} else {
+			for (int i = 0; i < size; i++) {
+				if (isDescendantsNull(i)) { // TODO: Consider using 2*i<size instead of current
+					if (heap[2 * i].t.priority >= heap[2 * i + 1].t.priority) { // FIXME: Compare between tasks using task.compareTo(anotherTask)
+						assignNewTaskToIndex(untidyTaskElement, i, 2 * i);
+					} else if (heap[2 * i + 1].t.priority > heap[2 * i].t.priority) {
+						assignNewTaskToIndex(untidyTaskElement, i, 2 * i + 1);
+					}
+				} else if (heap[2 * i] != null && heap[2 * i + 1] == null) {
+					assignNewTaskToIndex(untidyTaskElement, i, 2 * i);
 				}
-				else if(heap[2*i+1].t.priority > heap[2*i].t.priority) {
-					assignNewTaskToIndex(newTask, i, 2*i+1);
-				}
-			}
-			else if (heap[2*i] != null && heap[2*i+1] == null) {
-				assignNewTaskToIndex(newTask, i, 2*i);
 			}
 		}
-		heap[0] = newTask;
+	}
+
+	private boolean isDescendantsNull(int ancestorIndex) {
+		return (heap[2*ancestorIndex] != null && heap[2*ancestorIndex + 1] != null);
+	}
+
+	private boolean isHeapEmpty() {
+		return size == 0;
 	}
 
 	private void assignNewTaskToIndex(TaskElement newTask, int parentIndex, int descendantIndex){
