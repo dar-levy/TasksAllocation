@@ -62,8 +62,10 @@ public class TaskHeap{
      */
     public void insert(TaskElement e){
         //Your code comes here
-		percolateDown(e);
-    }
+		heap[size] = e;
+		size++;
+		percolateUp(e);
+	}
     
 	/**
 	 * Returns and does not remove the element which wraps the task with maximal priority.
@@ -98,23 +100,70 @@ public class TaskHeap{
      */
     public void remove(int index){
         //Your code comes here
+		if(index >= size){
+			System.out.println("Index is out of heaps range");
+		} else {
+			int i = index;
+			TaskElement lastTaskElement = heap[--size];
+			heap[i] = lastTaskElement;
+			heap[--size] = null;
+			if (heap[i/2].t.compareTo(heap[i].t) >= 0){
+				while(i < size){
+					if (!isDescendantsNull(i)){
+						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
+							heap[i] = heap[2*i];
+							heap[2 * i] = null;
+						} else {
+							heap[i] = heap[2 * i + 1];
+							heap[2 * i + 1] = null;
+						}
+					} else {
+						heap[index] = null;
+					}
+				}
+			} else {
+				while(i > 1) {
+					if (heap[i/2].t.compareTo(heap[i].t) < 0){
+						switchNodes(i/2, i);
+						i = i/2;
+					}
+				}
+			}
+		}
+		size--;
     }
-    
-    private void percolateDown(TaskElement newTask) {
+
+	private void percolateUp(TaskElement newTask){
+		if (!isHeapEmpty()){
+			int i = size;
+			while (i > 1) {
+				if (heap[i/2].t.compareTo(newTask.t) < 0){
+					switchNodes(i/2 - 1, i - 1);
+					i = i/2;
+				}
+			}
+		}
+	}
+
+    private void percolateDown(TaskElement newTask) { // TODO: Assign heapIndex to each TaskElement
 		TaskElement maxTask = heap[0];
 		TaskElement untidyTaskElement = maxTask.t.priority >= newTask.t.priority ? newTask : maxTask;
 		if (isHeapEmpty()){
 			heap[0] = newTask;
 		} else {
-			for (int i = 0; i < size; i++) {
+			int i = 1;
+			while(i < size) {
 				if (!isDescendantsNull(i)) {
-					if (heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0) {
-						assignNewTaskToIndex(untidyTaskElement, i, 2 * i);
+					if (heap[2 * i - 1].t.compareTo(heap[2 * i].t) >= 0) {
+						switchNodes(i - 1, 2 * i - 1);
+						i = 2*i - 1;
 					} else {
-						assignNewTaskToIndex(untidyTaskElement, i, 2 * i + 1);
+						switchNodes(i - 1, 2 * i);
+						i = 2*i;
 					}
-				} else if (heap[2 * i] != null && heap[2 * i + 1] == null) {
-					assignNewTaskToIndex(untidyTaskElement, i, 2 * i);
+				} else if (heap[2 * i - 1] != null && heap[2 * i] == null) {
+					switchNodes(i, 2 * i - 1);
+					i = 2*i - 1;
 				}
 			}
 		}
@@ -128,13 +177,11 @@ public class TaskHeap{
 		return size == 0;
 	}
 
-	private void assignNewTaskToIndex(TaskElement newTask, int parentIndex, int descendantIndex){
-		TaskElement ancestor = heap[parentIndex];
+	private void switchNodes(int ancestorIndex, int descendantIndex){
+		TaskElement ancestor = heap[ancestorIndex];
 		TaskElement biggerDescendant = heap[descendantIndex];
-		if (ancestor.t.priority < biggerDescendant.t.priority) {
-			heap[parentIndex] = biggerDescendant;
-			heap[descendantIndex] = ancestor;
-		}
+		heap[ancestorIndex] = biggerDescendant;
+		heap[descendantIndex] = ancestor;
 	}
 
     public static void main (String[] args){
