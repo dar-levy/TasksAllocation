@@ -107,10 +107,10 @@ public class TaskHeap{
 			heap[0] = newTask;
 		} else {
 			for (int i = 0; i < size; i++) {
-				if (!isDescendantsNull(i)) { // TODO: Consider using 2*i<size instead of current
-					if (heap[2 * i].t.priority >= heap[2 * i + 1].t.priority) { // FIXME: Compare between tasks using task.compareTo(anotherTask)
+				if (!isDescendantsNull(i)) {
+					if (heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0) {
 						assignNewTaskToIndex(untidyTaskElement, i, 2 * i);
-					} else if (heap[2 * i + 1].t.priority > heap[2 * i].t.priority) {
+					} else {
 						assignNewTaskToIndex(untidyTaskElement, i, 2 * i + 1);
 					}
 				} else if (heap[2 * i] != null && heap[2 * i + 1] == null) {
