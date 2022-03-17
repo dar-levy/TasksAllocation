@@ -39,8 +39,9 @@ public class TaskHeap{
 	 */
 	public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
-		for (int i = 0; i < arr.length; i++){
-
+		size = arr.length;
+		for (TaskElement taskElement : arr) {
+			percolateDown(taskElement);
 		}
 	}
 	
@@ -62,8 +63,6 @@ public class TaskHeap{
         //Your code comes here
     }
     
-    
-	
 	/**
 	 * Returns and does not remove the element which wraps the task with maximal priority.
 	 * 
@@ -97,7 +96,32 @@ public class TaskHeap{
         //Your code comes here
     }
     
-    
+    private void percolateDown(TaskElement newTask) {
+		for (int i = 0; i < size; i++){
+			if (heap[2*i] != null && heap[2*i + 1] != null) { // TODO: Consider using 2*i<size instead of current
+				if (heap[2*i].t.priority >= heap[2*i+1].t.priority) { // FIXME: Compare between tasks using task.compareTo(anotherTask)
+					assignNewTaskToIndex(newTask, i, 2*i);
+				}
+				else if(heap[2*i+1].t.priority > heap[2*i].t.priority) {
+					assignNewTaskToIndex(newTask, i, 2*i+1);
+				}
+			}
+			else if (heap[2*i] != null && heap[2*i+1] == null) {
+				assignNewTaskToIndex(newTask, i, 2*i);
+			}
+		}
+		heap[0] = newTask;
+	}
+
+	private void assignNewTaskToIndex(TaskElement newTask, int parentIndex, int descendantIndex){
+		TaskElement ancestor = heap[parentIndex];
+		TaskElement biggerDescendant = heap[descendantIndex];
+		if (ancestor.t.priority < biggerDescendant.t.priority) {
+			heap[parentIndex] = biggerDescendant;
+			heap[descendantIndex] = ancestor;
+		}
+	}
+
     public static void main (String[] args){
 
         	/*
