@@ -39,6 +39,7 @@ public class TaskHeap{
 	 */
 	public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
+		heap = new TaskElement[]{};
 		size = arr.length;
 		for (TaskElement taskElement : arr) {
 			percolateDown(taskElement);
@@ -61,6 +62,7 @@ public class TaskHeap{
      */
     public void insert(TaskElement e){
         //Your code comes here
+		percolateDown(e);
     }
     
 	/**
@@ -70,7 +72,7 @@ public class TaskHeap{
 	 */
     public TaskElement findMax(){
 		//Your code comes here
-		return null;
+		return heap[0];
     }
     
 	/**
@@ -80,7 +82,9 @@ public class TaskHeap{
 	 */
     public TaskElement extractMax() {
 		//Your code comes here
-		return null;
+		TaskElement maxTaskElement = heap[0];
+		remove(0);
+		return maxTaskElement;
     }
     
     /**
@@ -96,14 +100,14 @@ public class TaskHeap{
         //Your code comes here
     }
     
-    private void percolateDown(TaskElement newTask) { // FIXME: Must consider replacing head with newTask
+    private void percolateDown(TaskElement newTask) {
 		TaskElement maxTask = heap[0];
 		TaskElement untidyTaskElement = maxTask.t.priority >= newTask.t.priority ? newTask : maxTask;
 		if (isHeapEmpty()){
 			heap[0] = newTask;
 		} else {
 			for (int i = 0; i < size; i++) {
-				if (isDescendantsNull(i)) { // TODO: Consider using 2*i<size instead of current
+				if (!isDescendantsNull(i)) { // TODO: Consider using 2*i<size instead of current
 					if (heap[2 * i].t.priority >= heap[2 * i + 1].t.priority) { // FIXME: Compare between tasks using task.compareTo(anotherTask)
 						assignNewTaskToIndex(untidyTaskElement, i, 2 * i);
 					} else if (heap[2 * i + 1].t.priority > heap[2 * i].t.priority) {
@@ -117,7 +121,7 @@ public class TaskHeap{
 	}
 
 	private boolean isDescendantsNull(int ancestorIndex) {
-		return (heap[2*ancestorIndex] != null && heap[2*ancestorIndex + 1] != null);
+		return 2*ancestorIndex + 1 > size;
 	}
 
 	private boolean isHeapEmpty() {
