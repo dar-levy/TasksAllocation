@@ -39,10 +39,10 @@ public class TaskHeap{
 	 */
 	public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
-		heap = new TaskElement[]{};
-		size = arr.length;
+		this.heap = new TaskElement[0];
 		for (TaskElement taskElement : arr) {
 			percolateDown(taskElement);
+			size++;
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class TaskHeap{
 			heap[--size] = null;
 			if (heap[i/2].t.compareTo(heap[i].t) >= 0){
 				while(i < size){
-					if (!isDescendantsNull(i)){
+					if (bothDescendantsNull(i)){
 						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
 							heap[i] = heap[2*i];
 							heap[2 * i] = null;
@@ -146,31 +146,47 @@ public class TaskHeap{
 	}
 
     private void percolateDown(TaskElement newTask) { // TODO: Assign heapIndex to each TaskElement
-		TaskElement maxTask = heap[0];
-		TaskElement untidyTaskElement = maxTask.t.priority >= newTask.t.priority ? newTask : maxTask;
 		if (isHeapEmpty()){
 			heap[0] = newTask;
 		} else {
+			TaskElement maxTask = heap[0];
+			TaskElement untidyTask = maxTask.t.compareTo(newTask.t) >= 0 ? newTask : maxTask;
 			int i = 1;
 			while(i < size) {
-				if (!isDescendantsNull(i)) {
-					if (heap[2 * i - 1].t.compareTo(heap[2 * i].t) >= 0) {
-						switchNodes(i - 1, 2 * i - 1);
-						i = 2*i - 1;
+				Task ancestor = untidyTask.t;
+				if (bothDescendantsNull(i)) {
+					Task leftDescendant = heap[2*i-1].t;
+					Task rightDescendant = heap[2*i].t;
+					if (leftDescendant.compareTo(rightDescendant) >= 0) {
+						if (ancestor.compareTo(leftDescendant) < 0) {
+							untidyTask = replaceNode(2*i-1, untidyTask);
+							i = 2*i - 1;
+						}
 					} else {
-						switchNodes(i - 1, 2 * i);
-						i = 2*i;
+						if (ancestor.compareTo(rightDescendant) < 0) {
+							untidyTask = replaceNode(2*i, untidyTask);
+							i = 2 * i;
+						}
 					}
-				} else if (heap[2 * i - 1] != null && heap[2 * i] == null) {
-					switchNodes(i, 2 * i - 1);
-					i = 2*i - 1;
+				} else if (isDescendantExists(2*i-1)) {
+					heap[2*i] = untidyTask;
+					i = size;
+				} else {
+					heap[2*i-1] = untidyTask;
+					i = size;
 				}
 			}
 		}
 	}
 
-	private boolean isDescendantsNull(int ancestorIndex) {
-		return 2*ancestorIndex + 1 > size;
+	private TaskElement replaceNode(int index, TaskElement node) {
+		TaskElement temporaryDescendant = heap[index];
+		heap[index] = node;
+		return temporaryDescendant;
+	}
+
+	private boolean bothDescendantsNull(int ancestorIndex) {
+		return 2 * ancestorIndex + 1 <= size;
 	}
 
 	private boolean isHeapEmpty() {
@@ -182,6 +198,10 @@ public class TaskHeap{
 		TaskElement biggerDescendant = heap[descendantIndex];
 		heap[ancestorIndex] = biggerDescendant;
 		heap[descendantIndex] = ancestor;
+	}
+
+	private boolean isDescendantExists(int descendantIndex) {
+		return ((descendantIndex < size) && (descendantIndex + 1 >= size));
 	}
 
     public static void main (String[] args){
