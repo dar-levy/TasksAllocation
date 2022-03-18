@@ -105,36 +105,59 @@ public class TaskHeap{
      */
     public void remove(int index){
         //Your code comes here
-		if(index >= size) {
-			System.out.println("Index is out of heaps range");
-		} else if(size == 0) {
+		if(size == 0) {
 			System.out.println("Unable to remove any object, the heap is empty");
+		} else if(index >= size) {
+			System.out.println("Index is out of heaps range");
 		} else {
-			int i = index;
-			TaskElement lastTaskElement = heap[--size];
-			heap[i] = lastTaskElement;
-			heap[--size] = null;
-			if (heap[i/2].t.compareTo(heap[i].t) >= 0){
+			int i = index + 1;
+			TaskElement lastTaskElement = heap[size-1];
+			heap[i-1] = lastTaskElement;
+			heap[size-1] = null;
+			// TODO: Convert i to double with ceil to go to exact parent
+			double doubleI = i;
+			double doubleParentIndex = Math.ceil((doubleI - 1)/2) ;
+			int parentIndex = (int) doubleParentIndex;
+			if (i == 2){
+				parentIndex = 0;
+			}
+			if (heap[parentIndex].t.compareTo(heap[i-1].t) >= 0){
 				while(i < size){
-					if (bothDescendantsNull(i)){
-						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
-							heap[i] = heap[2*i];
-							heap[2 * i] = null;
+					if (!bothDescendantsNull(i)){
+						if(heap[2 * (i - 1)].t.compareTo(heap[2 * (i - 1) + 1].t) >= 0){
+							if (heap[i-1].t.compareTo(heap[2*(i-1)].t) < 0){
+								TaskElement temporaryParent = heap[i-1];
+								heap[i-1] = heap[2*(i-1)];
+								heap[2*(i-1)] = temporaryParent;
+								i = 2*(i-1);
+							} else {
+								i = size;
+							}
 						} else {
-							heap[i] = heap[2 * i + 1];
-							heap[2 * i + 1] = null;
+							if (heap[i-1].t.compareTo(heap[2*(i-1) + 1].t) < 0){
+								TaskElement temporaryParent = heap[i-1];
+								heap[i-1] = heap[2*(i-1)+1];
+								heap[2*(i-1)+1] = temporaryParent;
+								i = 2*(i-1)+1;
+							} else {
+								i = size;
+							}
+						}
+					} else if(isDescendantExists(2*(i-1))){
+						if (heap[i-1].t.compareTo(heap[2*(i-1)].t) < 0){
+							TaskElement temporaryParent = heap[i-1];
+							heap[i-1] = heap[2*(i-1)];
+							heap[2*(i-1)] = temporaryParent;
+							i = 2*(i-1);
+						} else {
+							i = size;
 						}
 					} else {
 						heap[index] = null;
 					}
 				}
 			} else {
-				while(i > 1) {
-					if (heap[i/2].t.compareTo(heap[i].t) < 0){
-						switchNodes(i/2, i);
-						i = i/2;
-					}
-				}
+				switchNodes(parentIndex, i-1);
 			}
 		}
 		size--;
