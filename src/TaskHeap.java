@@ -63,9 +63,13 @@ public class TaskHeap{
      */
     public void insert(TaskElement e){
         //Your code comes here
+		if (size == capacity) {
+			System.out.println("The heap is full, try remove first");
+			return;
+		}
 		heap[size] = e;
-		size++;
 		percolateUp(e);
+		size++;
 	}
     
 	/**
@@ -137,10 +141,13 @@ public class TaskHeap{
 	private void percolateUp(TaskElement newTask){
 		if (!isHeapEmpty()){
 			int i = size;
-			while (i > 1) {
-				if (heap[i/2].t.compareTo(newTask.t) < 0){
-					switchNodes(i/2 - 1, i - 1);
-					i = i/2;
+			while (i > 0) {
+				double j = i;
+				j = Math.ceil(j/2) - 1;
+				int k = (int) j;
+				if (heap[k].t.compareTo(newTask.t) < 0){
+					switchNodes(k, i);
+					i = k;
 				}
 			}
 		}
