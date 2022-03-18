@@ -39,7 +39,7 @@ public class TaskHeap{
 	 */
 	public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
-		this.heap = new TaskElement[0];
+		this.heap = new TaskElement[capacity];
 		for (TaskElement taskElement : arr) {
 			percolateDown(taskElement);
 			size++;
