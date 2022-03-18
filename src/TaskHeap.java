@@ -105,8 +105,10 @@ public class TaskHeap{
      */
     public void remove(int index){
         //Your code comes here
-		if(index >= size){
+		if(index >= size) {
 			System.out.println("Index is out of heaps range");
+		} else if(size == 0) {
+			System.out.println("Unable to remove any object, the heap is empty");
 		} else {
 			int i = index;
 			TaskElement lastTaskElement = heap[--size];
