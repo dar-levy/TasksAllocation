@@ -39,6 +39,7 @@ public class TaskHeap{
 	 */
 	public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
+		size = 0;
 		this.heap = new TaskElement[capacity];
 		for (TaskElement taskElement : arr) {
 			percolateDown(taskElement);
@@ -150,11 +151,12 @@ public class TaskHeap{
 			heap[0] = newTask;
 		} else {
 			TaskElement maxTask = heap[0];
+			heap[0] = maxTask.t.compareTo(newTask.t) >= 0 ? maxTask : newTask;
 			TaskElement untidyTask = maxTask.t.compareTo(newTask.t) >= 0 ? newTask : maxTask;
 			int i = 1;
-			while(i < size) {
+			while(i <= size) {
 				Task ancestor = untidyTask.t;
-				if (bothDescendantsNull(i)) {
+				if (!bothDescendantsNull(i)) {
 					Task leftDescendant = heap[2*i-1].t;
 					Task rightDescendant = heap[2*i].t;
 					if (leftDescendant.compareTo(rightDescendant) >= 0) {
@@ -170,10 +172,10 @@ public class TaskHeap{
 					}
 				} else if (isDescendantExists(2*i-1)) {
 					heap[2*i] = untidyTask;
-					i = size;
+					i = size+1;
 				} else {
 					heap[2*i-1] = untidyTask;
-					i = size;
+					i = size+1;
 				}
 			}
 		}
@@ -186,7 +188,7 @@ public class TaskHeap{
 	}
 
 	private boolean bothDescendantsNull(int ancestorIndex) {
-		return 2 * ancestorIndex + 1 <= size;
+		return 2 * ancestorIndex + 1 > size;
 	}
 
 	private boolean isHeapEmpty() {
