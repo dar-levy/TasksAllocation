@@ -107,14 +107,11 @@ public class TaskHeap{
         //Your code comes here
 		if(isHeapEmpty()) {
 			System.out.println("Unable to remove any object, the heap is empty");
-		} else if(index >= size) {
+		} else if(isIndexOutOfRange(index)) {
 			System.out.println("Index is out of heaps range");
 		} else {
+			assignLastTaskElementToIndex(index);
 			int i = index + 1;
-			TaskElement lastTaskElement = heap[size-1];
-			heap[i-1] = lastTaskElement;
-			heap[size-1] = null;
-			// TODO: Convert i to double with ceil to go to exact parent
 			double doubleI = i;
 			double doubleParentIndex = Math.ceil((doubleI - 1)/2) ;
 			int parentIndex = (int) doubleParentIndex;
@@ -163,6 +160,16 @@ public class TaskHeap{
 		}
 		size--;
     }
+
+	private void assignLastTaskElementToIndex(int index) {
+		TaskElement lastTaskElement = heap[size-1];
+		heap[index] = lastTaskElement;
+		heap[size-1] = null;
+	}
+
+	private boolean isIndexOutOfRange(int i){
+		return i >= size;
+	}
 
 	private void percolateUp(TaskElement newTask){
 		if (!isHeapEmpty()){
