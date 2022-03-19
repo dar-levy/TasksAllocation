@@ -124,31 +124,14 @@ public class TaskHeap{
 				while(i < size){
 					if (!bothDescendantsNull(i + 1)){
 						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
-							if (heap[i].t.compareTo(heap[2*i].t) < 0){
-								switchNodes(i, 2*i);
-								i = 2*i;
-							} else {
-								i = size;
-							}
+							i = tryReplaceAncestorWithDescendant(i, 2*i);
 						} else {
-							if (heap[i].t.compareTo(heap[2*i + 1].t) < 0){
-								switchNodes(i, 2*i + 1);
-								i = 2*i+1;
-							} else {
-								i = size;
-							}
+							i = tryReplaceAncestorWithDescendant(i, 2*i+1);
 						}
 					} else if(isDescendantExists(2*i)){
-						if (heap[i].t.compareTo(heap[2*i].t) < 0){
-							TaskElement temporaryParent = heap[i];
-							heap[i] = heap[2*i];
-							heap[2*i] = temporaryParent;
-							i = 2*i;
-						} else {
-							i = size;
-						}
+						i = tryReplaceAncestorWithDescendant(i, 2*i);
 					} else {
-						i = size;
+						return;
 					}
 				}
 			} else {
@@ -156,6 +139,15 @@ public class TaskHeap{
 			}
 		}
     }
+
+	private int tryReplaceAncestorWithDescendant(int ancestorIndex, int descendantIndex) {
+		if (heap[ancestorIndex].t.compareTo(heap[descendantIndex].t) < 0){
+			switchNodes(ancestorIndex, descendantIndex);
+			 return descendantIndex;
+		} else {
+			return size;
+		}
+	}
 
 	private void assignLastTaskElementToIndex(int index) {
 		TaskElement lastTaskElement = heap[size-1];
