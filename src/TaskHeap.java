@@ -107,7 +107,7 @@ public class TaskHeap{
         //Your code comes here
 		if(size == 0) {
 			System.out.println("Unable to remove any object, the heap is empty");
-		} else if(index >= size) {
+		} else if(index == size) {
 			System.out.println("Index is out of heaps range");
 		} else {
 			int i = index + 1;
@@ -121,6 +121,7 @@ public class TaskHeap{
 			if (i == 2){
 				parentIndex = 0;
 			}
+			if (heap[0] == null) return;
 			if (heap[parentIndex].t.compareTo(heap[i-1].t) >= 0){
 				while(i < size){
 					if (!bothDescendantsNull(i)){
@@ -153,7 +154,7 @@ public class TaskHeap{
 							i = size;
 						}
 					} else {
-						heap[index] = null;
+						i = size;
 					}
 				}
 			} else {
