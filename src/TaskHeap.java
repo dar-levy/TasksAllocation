@@ -129,12 +129,12 @@ public class TaskHeap{
 				while(i < size){
 					if (!bothDescendantsNull(i)){
 						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
-							i = tryReplaceAncestorWithDescendant(i, 2*i);
+							i = trySwitchAncestorWithDescendant(i, 2*i);
 						} else {
-							i = tryReplaceAncestorWithDescendant(i, 2*i+1);
+							i = trySwitchAncestorWithDescendant(i, 2*i+1);
 						}
 					} else if(isOnlyChild(2*i)){
-						i = tryReplaceAncestorWithDescendant(i, 2*i);
+						i = trySwitchAncestorWithDescendant(i, 2*i);
 					} else {
 						heap[i].heapIndex = i;
 						return;
@@ -146,7 +146,7 @@ public class TaskHeap{
 		}
     }
 
-	private int tryReplaceAncestorWithDescendant(int ancestorIndex, int descendantIndex) {
+	private int trySwitchAncestorWithDescendant(int ancestorIndex, int descendantIndex) {
 		if (heap[ancestorIndex].t.compareTo(heap[descendantIndex].t) < 0){
 			switchNodes(ancestorIndex, descendantIndex);
 			 return descendantIndex;
@@ -185,7 +185,7 @@ public class TaskHeap{
 		}
 	}
 
-    private void percolateDown(TaskElement untidyTask, int index) { // TODO: Assign heapIndex to each TaskElement
+    private void percolateDown(TaskElement untidyTask, int index) {
 		int i = index;
 		while(i <= size) {
 			Task ancestor = untidyTask.t;
