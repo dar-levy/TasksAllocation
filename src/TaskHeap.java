@@ -105,48 +105,43 @@ public class TaskHeap{
      */
     public void remove(int index){
         //Your code comes here
+		int i = index;
 		if(isHeapEmpty()) {
 			System.out.println("Unable to remove any object, the heap is empty");
 		} else if(isIndexOutOfRange(index)) {
 			System.out.println("Index is out of heaps range");
 		} else {
 			assignLastTaskElementToIndex(index);
-			int i = index + 1;
-			double doubleI = i;
-			double doubleParentIndex = Math.ceil((doubleI - 1)/2) ;
-			int parentIndex = (int) doubleParentIndex;
-			if (i == 2){
-				parentIndex = 0;
-			}
 			if (heap[0] == null) return;
-			if (heap[parentIndex].t.compareTo(heap[i-1].t) >= 0){
+			int ancestorIndex = getAncestorIndex(index);
+			if (heap[ancestorIndex].t.compareTo(heap[i].t) >= 0){
 				while(i < size){
-					if (!bothDescendantsNull(i)){
-						if(heap[2 * (i - 1)].t.compareTo(heap[2 * (i - 1) + 1].t) >= 0){
-							if (heap[i-1].t.compareTo(heap[2*(i-1)].t) < 0){
-								TaskElement temporaryParent = heap[i-1];
-								heap[i-1] = heap[2*(i-1)];
-								heap[2*(i-1)] = temporaryParent;
-								i = 2*(i-1);
+					if (!bothDescendantsNull(i + 1)){
+						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
+							if (heap[i].t.compareTo(heap[2*i].t) < 0){
+								TaskElement temporaryParent = heap[i];
+								heap[i] = heap[2*i];
+								heap[2*i] = temporaryParent;
+								i = 2*i;
 							} else {
 								i = size;
 							}
 						} else {
-							if (heap[i-1].t.compareTo(heap[2*(i-1) + 1].t) < 0){
-								TaskElement temporaryParent = heap[i-1];
-								heap[i-1] = heap[2*(i-1)+1];
-								heap[2*(i-1)+1] = temporaryParent;
-								i = 2*(i-1)+1;
+							if (heap[i].t.compareTo(heap[2*i + 1].t) < 0){
+								TaskElement temporaryParent = heap[i];
+								heap[i] = heap[2*i+1];
+								heap[2*i+1] = temporaryParent;
+								i = 2*i+1;
 							} else {
 								i = size;
 							}
 						}
-					} else if(isDescendantExists(2*(i-1))){
-						if (heap[i-1].t.compareTo(heap[2*(i-1)].t) < 0){
-							TaskElement temporaryParent = heap[i-1];
-							heap[i-1] = heap[2*(i-1)];
-							heap[2*(i-1)] = temporaryParent;
-							i = 2*(i-1);
+					} else if(isDescendantExists(2*i)){
+						if (heap[i].t.compareTo(heap[2*i].t) < 0){
+							TaskElement temporaryParent = heap[i];
+							heap[i] = heap[2*i];
+							heap[2*i] = temporaryParent;
+							i = 2*i;
 						} else {
 							i = size;
 						}
@@ -155,16 +150,21 @@ public class TaskHeap{
 					}
 				}
 			} else {
-				switchNodes(parentIndex, i-1);
+				switchNodes(ancestorIndex, i);
 			}
 		}
-		size--;
     }
 
 	private void assignLastTaskElementToIndex(int index) {
 		TaskElement lastTaskElement = heap[size-1];
 		heap[index] = lastTaskElement;
 		heap[size-1] = null;
+		size--;
+	}
+
+	private int getAncestorIndex(int index){
+		double doubleParentIndex = Math.ceil(((double) index)/2) ;
+		return (int) doubleParentIndex;
 	}
 
 	private boolean isIndexOutOfRange(int i){
@@ -228,7 +228,7 @@ public class TaskHeap{
 	}
 
 	private boolean bothDescendantsNull(int ancestorIndex) {
-		return 2 * ancestorIndex + 1 > size;
+		return 2 * (ancestorIndex) + 1 > size;
 	}
 
 	private boolean isHeapEmpty() {
