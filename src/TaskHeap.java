@@ -42,7 +42,13 @@ public class TaskHeap{
 		size = 0;
 		this.heap = new TaskElement[capacity];
 		for (TaskElement taskElement : arr) {
-			percolateDown(taskElement);
+			if (isHeapEmpty()) { heap[0] = taskElement; }
+			else {
+				TaskElement maxTask = heap[0];
+				heap[0] = maxTask.t.compareTo(taskElement.t) >= 0 ? maxTask : taskElement;
+				TaskElement untidyTask = maxTask.t.compareTo(taskElement.t) >= 0 ? taskElement : maxTask;
+				percolateDown(untidyTask, 1);
+			}
 			size++;
 		}
 	}
@@ -186,37 +192,30 @@ public class TaskHeap{
 		}
 	}
 
-    private void percolateDown(TaskElement newTask) { // TODO: Assign heapIndex to each TaskElement
-		if (isHeapEmpty()){
-			heap[0] = newTask;
-		} else {
-			TaskElement maxTask = heap[0];
-			heap[0] = maxTask.t.compareTo(newTask.t) >= 0 ? maxTask : newTask;
-			TaskElement untidyTask = maxTask.t.compareTo(newTask.t) >= 0 ? newTask : maxTask;
-			int i = 1;
-			while(i <= size) {
-				Task ancestor = untidyTask.t;
-				if (!bothDescendantsNull(i)) {
-					Task leftDescendant = heap[2*i-1].t;
-					Task rightDescendant = heap[2*i].t;
-					if (leftDescendant.compareTo(rightDescendant) >= 0) {
-						if (ancestor.compareTo(leftDescendant) < 0) {
-							untidyTask = replaceNode(2*i-1, untidyTask);
-							i = 2*i - 1;
-						}
-					} else {
-						if (ancestor.compareTo(rightDescendant) < 0) {
-							untidyTask = replaceNode(2*i, untidyTask);
-							i = 2 * i;
-						}
+    private void percolateDown(TaskElement untidyTask, int index) { // TODO: Assign heapIndex to each TaskElement
+		int i = index;
+		while(i <= size) {
+			Task ancestor = untidyTask.t;
+			if (!bothDescendantsNull(i)) {
+				Task leftDescendant = heap[2 * i - 1].t;
+				Task rightDescendant = heap[2 * i].t;
+				if (leftDescendant.compareTo(rightDescendant) >= 0) {
+					if (ancestor.compareTo(leftDescendant) < 0) {
+						untidyTask = replaceNode(2 * i - 1, untidyTask);
+						i = 2 * i - 1;
 					}
-				} else if (isDescendantExists(2*i-1)) {
-					heap[2*i] = untidyTask;
-					i = size+1;
 				} else {
-					heap[2*i-1] = untidyTask;
-					i = size+1;
+					if (ancestor.compareTo(rightDescendant) < 0) {
+						untidyTask = replaceNode(2 * i, untidyTask);
+						i = 2 * i;
+					}
 				}
+			} else if (isDescendantExists(2 * i - 1)) {
+				heap[2 * i] = untidyTask;
+				i = size + 1;
+			} else {
+				heap[2 * i - 1] = untidyTask;
+				i = size + 1;
 			}
 		}
 	}
