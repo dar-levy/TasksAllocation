@@ -125,18 +125,14 @@ public class TaskHeap{
 					if (!bothDescendantsNull(i + 1)){
 						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
 							if (heap[i].t.compareTo(heap[2*i].t) < 0){
-								TaskElement temporaryParent = heap[i];
-								heap[i] = heap[2*i];
-								heap[2*i] = temporaryParent;
+								switchNodes(i, 2*i);
 								i = 2*i;
 							} else {
 								i = size;
 							}
 						} else {
 							if (heap[i].t.compareTo(heap[2*i + 1].t) < 0){
-								TaskElement temporaryParent = heap[i];
-								heap[i] = heap[2*i+1];
-								heap[2*i+1] = temporaryParent;
+								switchNodes(i, 2*i + 1);
 								i = 2*i+1;
 							} else {
 								i = size;
