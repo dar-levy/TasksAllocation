@@ -98,8 +98,8 @@ public class TaskHeap{
 	 */
     public TaskElement extractMax() {
 		//Your code comes here
-		TaskElement maxTaskElement = heap[0];
-		remove(0);
+		TaskElement maxTaskElement = heap[1];
+		remove(1);
 		return maxTaskElement;
     }
     
@@ -121,11 +121,11 @@ public class TaskHeap{
 			System.out.println("Index is out of heaps range");
 		} else {
 			assignLastTaskElementToIndex(index);
-			if (heap[0] == null) return;
 			int ancestorIndex = getAncestorIndex(index);
+			if (heap[1] == null || ancestorIndex == 0) return;
 			if (heap[ancestorIndex].t.compareTo(heap[i].t) >= 0){
 				while(i < size){
-					if (!bothDescendantsNull(i + 1)){
+					if (!bothDescendantsNull(i)){
 						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
 							i = tryReplaceAncestorWithDescendant(i, 2*i);
 						} else {
@@ -153,19 +153,19 @@ public class TaskHeap{
 	}
 
 	private void assignLastTaskElementToIndex(int index) {
-		TaskElement lastTaskElement = heap[size-1];
-		heap[index] = lastTaskElement;
-		heap[size-1] = null;
+		heap[index] = heap[size];
+		heap[size] = null;
 		size--;
 	}
 
 	private int getAncestorIndex(int index){
 		double ancestorIndex = Math.floor(((double) index)/2) ;
+		if (ancestorIndex == 0) return 1;
 		return (int) ancestorIndex;
 	}
 
 	private boolean isIndexOutOfRange(int i){
-		return i >= size;
+		return i > size;
 	}
 
 	private void percolateUp(TaskElement newTask){
