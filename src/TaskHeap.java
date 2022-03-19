@@ -239,22 +239,21 @@ public class TaskHeap{
 		return ((descendantIndex < size) && (descendantIndex + 1 >= size));
 	}
 
+	/**
+	 * A basic test for the heap.
+	 * You should be able to run this before implementing the queue.
+	 *
+	 * Expected outcome:
+	 * 	task: Add a new feature, priority: 10
+	 *	task: Solve a problem in production, priority: 100
+	 *	task: Solve a problem in production, priority: 100
+	 *	task: Develop a new feature, priority: 10
+	 *	task: Code Review, priority: 3
+	 *	task: Move to the new Kafka server, priority: 2
+	 *
+	 */
     public static void main (String[] args){
 
-        	/*
-        	 * A basic test for the heap.
-        	 * You should be able to run this before implementing the queue.
-        	 * 
-        	 * Expected outcome: 
-        	 * 	task: Add a new feature, priority: 10
-    		 *	task: Solve a problem in production, priority: 100
-    		 *	task: Solve a problem in production, priority: 100
-    		 *	task: Develop a new feature, priority: 10
-    		 *	task: Code Review, priority: 3
-    		 *	task: Move to the new Kafka server, priority: 2
-        	 * 
-        	 */
-        	
         	Task a = new Task(10, "Add a new feature");
         	Task b = new Task(3, "Code Review");
         	Task c = new Task(2, "Move to the new Kafka server");
@@ -270,6 +269,5 @@ public class TaskHeap{
         	System.out.println(heap.extractMax());
             System.out.println(heap.extractMax());
         	System.out.println(heap.extractMax());
-        
         }
 }

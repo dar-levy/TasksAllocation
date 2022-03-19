@@ -1,5 +1,4 @@
 
-
 /**
  * A queue class, implemented as a linked list.
  * The nodes of the linked list are implemented as the TaskElement class.
@@ -10,7 +9,7 @@ public class TaskQueue {
 
 	TaskElement first;
 	TaskElement last;
-	
+
 	/**
 	 * Constructs an empty queue
 	 */
@@ -18,7 +17,7 @@ public class TaskQueue {
 		first = null;
 		last = null;
 	}
-	
+
 	/**
 	 * Removes and returns the first element in the queue
 	 * 
