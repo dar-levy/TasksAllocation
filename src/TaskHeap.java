@@ -42,8 +42,19 @@ public class TaskHeap{
 		size = 0;
 		this.heap = new TaskElement[capacity];
 		for (TaskElement taskElement : arr) {
-			percolateDown(taskElement);
-			size++;
+			if (isHeapEmpty()) {
+				taskElement.heapIndex = 1;
+				heap[1] = taskElement;
+				size++;
+			}
+			else {
+				TaskElement maxTask = heap[1];
+				heap[1] = maxTask.t.compareTo(taskElement.t) >= 0 ? maxTask : taskElement;
+				TaskElement untidyTask = maxTask.t.compareTo(taskElement.t) >= 0 ? taskElement : maxTask;
+				heap[1].heapIndex = 1;
+				percolateDown(untidyTask, 1);
+				size++;
+			}
 		}
 	}
 	
@@ -67,9 +78,9 @@ public class TaskHeap{
 			System.out.println("The heap is full, try remove first");
 			return;
 		}
-		heap[size] = e;
-		percolateUp(e);
+		heap[size+1] = e;
 		size++;
+		percolateUp(e);
 	}
     
 	/**
@@ -79,7 +90,7 @@ public class TaskHeap{
 	 */
     public TaskElement findMax(){
 		//Your code comes here
-		return heap[0];
+		return heap[1];
     }
     
 	/**
@@ -89,8 +100,8 @@ public class TaskHeap{
 	 */
     public TaskElement extractMax() {
 		//Your code comes here
-		TaskElement maxTaskElement = heap[0];
-		remove(0);
+		TaskElement maxTaskElement = heap[1];
+		remove(1);
 		return maxTaskElement;
     }
     
@@ -105,123 +116,114 @@ public class TaskHeap{
      */
     public void remove(int index){
         //Your code comes here
-		if(size == 0) {
+		int i = index;
+		if(isHeapEmpty()) {
 			System.out.println("Unable to remove any object, the heap is empty");
-		} else if(index == size) {
+		} else if(isIndexOutOfRange(index)) {
 			System.out.println("Index is out of heaps range");
 		} else {
-			int i = index + 1;
-			TaskElement lastTaskElement = heap[size-1];
-			heap[i-1] = lastTaskElement;
-			heap[size-1] = null;
-			// TODO: Convert i to double with ceil to go to exact parent
-			double doubleI = i;
-			double doubleParentIndex = Math.ceil((doubleI - 1)/2) ;
-			int parentIndex = (int) doubleParentIndex;
-			if (i == 2){
-				parentIndex = 0;
-			}
-			if (heap[0] == null) return;
-			if (heap[parentIndex].t.compareTo(heap[i-1].t) >= 0){
+			assignLastTaskElementToIndex(index);
+			int ancestorIndex = getAncestorIndex(index);
+			if (heap[1] == null || ancestorIndex == 0) return;
+			if (heap[ancestorIndex].t.compareTo(heap[i].t) >= 0){
 				while(i < size){
 					if (!bothDescendantsNull(i)){
-						if(heap[2 * (i - 1)].t.compareTo(heap[2 * (i - 1) + 1].t) >= 0){
-							if (heap[i-1].t.compareTo(heap[2*(i-1)].t) < 0){
-								TaskElement temporaryParent = heap[i-1];
-								heap[i-1] = heap[2*(i-1)];
-								heap[2*(i-1)] = temporaryParent;
-								i = 2*(i-1);
-							} else {
-								i = size;
-							}
+						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
+							i = trySwitchAncestorWithDescendant(i, 2*i);
 						} else {
-							if (heap[i-1].t.compareTo(heap[2*(i-1) + 1].t) < 0){
-								TaskElement temporaryParent = heap[i-1];
-								heap[i-1] = heap[2*(i-1)+1];
-								heap[2*(i-1)+1] = temporaryParent;
-								i = 2*(i-1)+1;
-							} else {
-								i = size;
-							}
+							i = trySwitchAncestorWithDescendant(i, 2*i+1);
 						}
-					} else if(isDescendantExists(2*(i-1))){
-						if (heap[i-1].t.compareTo(heap[2*(i-1)].t) < 0){
-							TaskElement temporaryParent = heap[i-1];
-							heap[i-1] = heap[2*(i-1)];
-							heap[2*(i-1)] = temporaryParent;
-							i = 2*(i-1);
-						} else {
-							i = size;
-						}
+					} else if(isOnlyChild(2*i)){
+						i = trySwitchAncestorWithDescendant(i, 2*i);
 					} else {
-						i = size;
+						heap[i].heapIndex = i;
+						return;
 					}
 				}
 			} else {
-				switchNodes(parentIndex, i-1);
+				percolateUp(heap[i]);
 			}
 		}
-		size--;
     }
+
+	private int trySwitchAncestorWithDescendant(int ancestorIndex, int descendantIndex) {
+		if (heap[ancestorIndex].t.compareTo(heap[descendantIndex].t) < 0){
+			switchNodes(ancestorIndex, descendantIndex);
+			 return descendantIndex;
+		} else {
+			return size;
+		}
+	}
+
+	private void assignLastTaskElementToIndex(int index) {
+		heap[index] = heap[size];
+		heap[index].heapIndex = index;
+		heap[size] = null;
+		size--;
+	}
+
+	private int getAncestorIndex(int index){
+		double ancestorIndex = Math.floor(((double) index)/2) ;
+		if (ancestorIndex == 0) return 1;
+		return (int) ancestorIndex;
+	}
+
+	private boolean isIndexOutOfRange(int i){
+		return i > size;
+	}
 
 	private void percolateUp(TaskElement newTask){
 		if (!isHeapEmpty()){
 			int i = size;
-			while (i > 0) {
-				double j = i;
-				j = Math.ceil(j/2) - 1;
-				int k = (int) j;
-				if (heap[k].t.compareTo(newTask.t) < 0){
-					switchNodes(k, i);
-					i = k;
+			while (i > 1) {
+				int ancestorIndex = getAncestorIndex(i);
+				if (heap[ancestorIndex].t.compareTo(newTask.t) < 0){
+					switchNodes(ancestorIndex, i);
+					i = ancestorIndex;
 				}
 			}
 		}
 	}
 
-    private void percolateDown(TaskElement newTask) { // TODO: Assign heapIndex to each TaskElement
-		if (isHeapEmpty()){
-			heap[0] = newTask;
-		} else {
-			TaskElement maxTask = heap[0];
-			heap[0] = maxTask.t.compareTo(newTask.t) >= 0 ? maxTask : newTask;
-			TaskElement untidyTask = maxTask.t.compareTo(newTask.t) >= 0 ? newTask : maxTask;
-			int i = 1;
-			while(i <= size) {
-				Task ancestor = untidyTask.t;
-				if (!bothDescendantsNull(i)) {
-					Task leftDescendant = heap[2*i-1].t;
-					Task rightDescendant = heap[2*i].t;
-					if (leftDescendant.compareTo(rightDescendant) >= 0) {
-						if (ancestor.compareTo(leftDescendant) < 0) {
-							untidyTask = replaceNode(2*i-1, untidyTask);
-							i = 2*i - 1;
-						}
-					} else {
-						if (ancestor.compareTo(rightDescendant) < 0) {
-							untidyTask = replaceNode(2*i, untidyTask);
-							i = 2 * i;
-						}
+    private void percolateDown(TaskElement untidyTask, int index) {
+		int i = index;
+		while(i <= size) {
+			Task ancestor = untidyTask.t;
+			if (!bothDescendantsNull(i)) {
+				Task leftDescendant = heap[2 * i].t;
+				Task rightDescendant = heap[2 * i + 1].t;
+				if (leftDescendant.compareTo(rightDescendant) >= 0) {
+					if (ancestor.compareTo(leftDescendant) < 0) {
+						untidyTask = replaceNode(2 * i, untidyTask);
+						i = 2 * i;
 					}
-				} else if (isDescendantExists(2*i-1)) {
-					heap[2*i] = untidyTask;
-					i = size+1;
 				} else {
-					heap[2*i-1] = untidyTask;
-					i = size+1;
+					if (ancestor.compareTo(rightDescendant) < 0) {
+						untidyTask = replaceNode(2 * i + 1, untidyTask);
+						i = 2 * i + 1;
+					}
 				}
+			} else if (isOnlyChild(2 * i )) {
+				untidyTask.heapIndex = 2*i+1;
+				heap[2 * i + 1] = untidyTask;
+				i = size + 1;
+			} else {
+				untidyTask.heapIndex = 2*i;
+				heap[2 * i] = untidyTask;
+				i = size + 1;
 			}
 		}
 	}
 
 	private TaskElement replaceNode(int index, TaskElement node) {
 		TaskElement temporaryDescendant = heap[index];
+		node.heapIndex = index;
 		heap[index] = node;
 		return temporaryDescendant;
 	}
 
 	private boolean bothDescendantsNull(int ancestorIndex) {
-		return 2 * ancestorIndex + 1 > size;
+		return 2 * (ancestorIndex) + 1 > size;
 	}
 
 	private boolean isHeapEmpty() {
@@ -231,12 +233,14 @@ public class TaskHeap{
 	private void switchNodes(int ancestorIndex, int descendantIndex){
 		TaskElement ancestor = heap[ancestorIndex];
 		TaskElement biggerDescendant = heap[descendantIndex];
+		ancestor.heapIndex = descendantIndex;
+		biggerDescendant.heapIndex = ancestorIndex;
 		heap[ancestorIndex] = biggerDescendant;
 		heap[descendantIndex] = ancestor;
 	}
 
-	private boolean isDescendantExists(int descendantIndex) {
-		return ((descendantIndex < size) && (descendantIndex + 1 >= size));
+	private boolean isOnlyChild(int descendantIndex) {
+		return ((descendantIndex == size) && (descendantIndex + 1 > size));
 	}
 
 	/**
