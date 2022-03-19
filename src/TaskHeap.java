@@ -133,7 +133,7 @@ public class TaskHeap{
 						} else {
 							i = tryReplaceAncestorWithDescendant(i, 2*i+1);
 						}
-					} else if(isDescendantExists(2*i)){
+					} else if(isOnlyChild(2*i)){
 						i = tryReplaceAncestorWithDescendant(i, 2*i);
 					} else {
 						heap[i].heapIndex = i;
@@ -141,7 +141,7 @@ public class TaskHeap{
 					}
 				}
 			} else {
-				switchNodes(ancestorIndex, i);
+				percolateUp(heap[i]);
 			}
 		}
     }
@@ -203,7 +203,7 @@ public class TaskHeap{
 						i = 2 * i + 1;
 					}
 				}
-			} else if (isDescendantExists(2 * i )) {
+			} else if (isOnlyChild(2 * i )) {
 				untidyTask.heapIndex = 2*i+1;
 				heap[2 * i + 1] = untidyTask;
 				i = size + 1;
@@ -239,7 +239,7 @@ public class TaskHeap{
 		heap[descendantIndex] = ancestor;
 	}
 
-	private boolean isDescendantExists(int descendantIndex) {
+	private boolean isOnlyChild(int descendantIndex) {
 		return ((descendantIndex == size) && (descendantIndex + 1 > size));
 	}
 
