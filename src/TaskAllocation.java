@@ -33,10 +33,8 @@ public class TaskAllocation{
 	public TaskAllocation(TaskElement [] arr){
 		this.q = new TaskQueue();
 		this.heap = new TaskHeap(arr);
-		TaskHeap temporaryHeap = this.heap;
-		while(temporaryHeap.heap.length > 0){
-			TaskElement currentMax = temporaryHeap.extractMax();
-			this.q.enqueue(currentMax);
+		for (TaskElement task : arr) {
+			this.q.enqueue(task);
 		}
 	}
 
