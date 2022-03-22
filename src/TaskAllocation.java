@@ -34,9 +34,9 @@ public class TaskAllocation{
 		this.q = new TaskQueue();
 		this.heap = new TaskHeap(arr);
 		for (TaskElement task : arr) {
-			for (TaskElement taskHeap : this.heap.heap) {
-				if (task.t.compareTo(taskHeap.t) == 0){
-					task.heapIndex = taskHeap.heapIndex;
+			for(int i = 1; this.heap.heap[i] != null; i++){
+				if (task.t.compareTo(this.heap.heap[i].t) == 0){
+					task.heapIndex = this.heap.heap[i].heapIndex;
 					this.q.enqueue(task);
 				}
 			}
