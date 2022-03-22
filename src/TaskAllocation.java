@@ -34,7 +34,12 @@ public class TaskAllocation{
 		this.q = new TaskQueue();
 		this.heap = new TaskHeap(arr);
 		for (TaskElement task : arr) {
-			this.q.enqueue(task);
+			for (TaskElement taskHeap : this.heap.heap) {
+				if (task.t.compareTo(taskHeap.t) == 0){
+					task.heapIndex = taskHeap.heapIndex;
+					this.q.enqueue(task);
+				}
+			}
 		}
 	}
 
@@ -85,7 +90,9 @@ public class TaskAllocation{
 	 */
 	public Task allocateRegularTask(){
 		//Your code comes here
-		return null;
+		TaskElement firstTaskQueue = this.q.dequeue();
+		this.heap.remove(firstTaskQueue.heapIndex);
+		return firstTaskQueue.t;
 	}
 
 
