@@ -31,12 +31,13 @@ public class TaskAllocation{
 	 * @param arr a given array of TaskElements. The heapIndex field of the elements in arr might be incorrect
 	 */
 	public TaskAllocation(TaskElement [] arr){
-		this.q=new TaskQueue();
-		for(int i=0; i<arr.length;i++) {
-			q.enqueue(arr[i]);
+		this.q = new TaskQueue();
+		this.heap = new TaskHeap(arr);
+		TaskHeap temporaryHeap = this.heap;
+		while(temporaryHeap.heap.length > 0){
+			TaskElement currentMax = temporaryHeap.extractMax();
+			this.q.enqueue(currentMax);
 		}
-		this.heap= new TaskHeap(arr);
-
 	}
 
 	/**
@@ -48,6 +49,9 @@ public class TaskAllocation{
 	 */
 	public void addTask(Task c){
 		//Your code comes here
+		TaskElement cNode = new TaskElement(c);
+		this.heap.insert(cNode);
+		this.q.enqueue(cNode);
 	}
 	
 	/**
