@@ -51,13 +51,24 @@ public class TaskQueue {
 	public void enqueue(TaskElement node){
 		//Your code comes here
 		if (last == null){
+			node.prev = null;
+			node.next = null;
 			last = node;
-			node.next = first;
+			first = node;
+		}
+		else if(last.t.compareTo(first.t) == 0) {
+			first = last;
+			last = node;
+			last.next = first;
+			first.prev = last;
 		}
 		else {
-			TaskElement temporaryLast = last;
-			temporaryLast.prev = node;
+			TaskElement taskBeforeLast = last;
+			taskBeforeLast.prev = last;
 			last = node;
+			last.next = taskBeforeLast;
+			taskBeforeLast.next = taskBeforeLast.next.next;
+			taskBeforeLast.next.prev = taskBeforeLast;
 		}
 	}
 	
