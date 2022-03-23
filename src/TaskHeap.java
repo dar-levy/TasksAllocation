@@ -126,20 +126,7 @@ public class TaskHeap{
 			int ancestorIndex = getAncestorIndex(index);
 			if (heap[1] == null || ancestorIndex == 0 || heap[i] == null) return;
 			if (heap[ancestorIndex].t.compareTo(heap[i].t) >= 0){
-				while(i < size){
-					if (!bothDescendantsNull(i)){
-						if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
-							i = trySwitchAncestorWithDescendant(i, 2*i);
-						} else {
-							i = trySwitchAncestorWithDescendant(i, 2*i+1);
-						}
-					} else if(isOnlyChild(2*i)){
-						i = trySwitchAncestorWithDescendant(i, 2*i);
-					} else {
-						heap[i].heapIndex = i;
-						return;
-					}
-				}
+				percolateDown(null, i);
 			} else {
 				percolateUp(heap[i]);
 			}
@@ -188,29 +175,44 @@ public class TaskHeap{
     private void percolateDown(TaskElement untidyTask, int index) {
 		int i = index;
 		while(i <= size) {
-			Task ancestor = untidyTask.t;
-			if (!bothDescendantsNull(i)) {
-				Task leftDescendant = heap[2 * i].t;
-				Task rightDescendant = heap[2 * i + 1].t;
-				if (leftDescendant.compareTo(rightDescendant) >= 0) {
-					if (ancestor.compareTo(leftDescendant) < 0) {
-						untidyTask = replaceNode(2 * i, untidyTask);
-						i = 2 * i;
+			if (untidyTask != null){
+				Task ancestor = untidyTask.t;
+				if (!bothDescendantsNull(i)) {
+					Task leftDescendant = heap[2 * i].t;
+					Task rightDescendant = heap[2 * i + 1].t;
+					if (leftDescendant.compareTo(rightDescendant) >= 0) {
+						if (ancestor.compareTo(leftDescendant) < 0) {
+							untidyTask = replaceNode(2 * i, untidyTask);
+							i = 2 * i;
+						}
+					} else {
+						if (ancestor.compareTo(rightDescendant) < 0) {
+							untidyTask = replaceNode(2 * i + 1, untidyTask);
+							i = 2 * i + 1;
+						}
 					}
+				} else if (isOnlyChild(2 * i )) {
+					untidyTask.heapIndex = 2*i+1;
+					heap[2 * i + 1] = untidyTask;
+					i = size + 1;
 				} else {
-					if (ancestor.compareTo(rightDescendant) < 0) {
-						untidyTask = replaceNode(2 * i + 1, untidyTask);
-						i = 2 * i + 1;
-					}
+					untidyTask.heapIndex = 2*i;
+					heap[2 * i] = untidyTask;
+					i = size + 1;
 				}
-			} else if (isOnlyChild(2 * i )) {
-				untidyTask.heapIndex = 2*i+1;
-				heap[2 * i + 1] = untidyTask;
-				i = size + 1;
 			} else {
-				untidyTask.heapIndex = 2*i;
-				heap[2 * i] = untidyTask;
-				i = size + 1;
+				if (!bothDescendantsNull(i)){
+					if(heap[2 * i].t.compareTo(heap[2 * i + 1].t) >= 0){
+						i = trySwitchAncestorWithDescendant(i, 2*i);
+					} else {
+						i = trySwitchAncestorWithDescendant(i, 2*i+1);
+					}
+				} else if(isOnlyChild(2*i)){
+					i = trySwitchAncestorWithDescendant(i, 2*i);
+				} else {
+					heap[i].heapIndex = i;
+					return;
+				}
 			}
 		}
 	}
