@@ -53,8 +53,8 @@ public class TaskHeap{
 			else {
 				TaskElement maxTask = heap[1];
 				heap[1] = maxTask.t.compareTo(taskElement.t) >= 0 ? maxTask : taskElement;
-				TaskElement untidyTask = maxTask.t.compareTo(taskElement.t) >= 0 ? taskElement : maxTask;
 				heap[1].heapIndex = 1;
+				TaskElement untidyTask = maxTask.t.compareTo(taskElement.t) >= 0 ? taskElement : maxTask;
 				percolateDown(untidyTask, 1);
 				size++;
 			}
@@ -191,12 +191,12 @@ public class TaskHeap{
 				Task leftDescendant = heap[2 * i].t;
 				Task rightDescendant = heap[2 * i + 1].t;
 				if (leftDescendant.compareTo(rightDescendant) >= 0) {
-					if (ancestor.compareTo(leftDescendant) < 0) {
+					if (ancestor.compareTo(leftDescendant) > 0) {
 						untidyTask = replaceNode(2 * i, untidyTask);
 						i = 2 * i;
 					}
 				} else {
-					if (ancestor.compareTo(rightDescendant) < 0) {
+					if (ancestor.compareTo(rightDescendant) > 0) {
 						untidyTask = replaceNode(2 * i + 1, untidyTask);
 						i = 2 * i + 1;
 					}
@@ -206,8 +206,8 @@ public class TaskHeap{
 				heap[2 * i + 1] = untidyTask;
 				i = size + 1;
 			} else {
-				untidyTask.heapIndex = 2 * i;
-				heap[2 * i] = untidyTask;
+				untidyTask.heapIndex = i + 1;
+				heap[i + 1] = untidyTask;
 				i = size + 1;
 			}
 		}
