@@ -124,7 +124,7 @@ public class TaskHeap{
 		} else {
 			assignLastTaskElementToIndex(index);
 			int ancestorIndex = getAncestorIndex(index);
-			if (heap[1] == null || ancestorIndex == 0) return;
+			if (heap[1] == null || ancestorIndex == 0 || heap[i] == null) return;
 			if (heap[ancestorIndex].t.compareTo(heap[i].t) >= 0){
 				while(i < size){
 					if (!bothDescendantsNull(i)){

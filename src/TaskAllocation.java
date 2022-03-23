@@ -31,12 +31,29 @@ public class TaskAllocation{
 	 * @param arr a given array of TaskElements. The heapIndex field of the elements in arr might be incorrect
 	 */
 	public TaskAllocation(TaskElement [] arr){
-		this.q=new TaskQueue();
-		for(int i=0; i<arr.length;i++) {
-			q.enqueue(arr[i]);
+		this.q = new TaskQueue();
+		this.heap = new TaskHeap(arr);
+		for (TaskElement task : arr) {
+			assignHeapIndexToTask(task);
 		}
-		this.heap= new TaskHeap(arr);
+	}
 
+	private void synchroniseQueueWithHeapIndices() {
+		TaskElement currentTask = this.q.peek();
+		this.q = new TaskQueue();
+		while(currentTask != null) {
+			assignHeapIndexToTask(currentTask);
+			currentTask = currentTask.prev;
+		}
+	}
+
+	private void assignHeapIndexToTask(TaskElement task) {
+		for(int i = 1; this.heap.heap[i] != null; i++){
+			if (task.t.compareTo(this.heap.heap[i].t) == 0){
+				task.heapIndex = this.heap.heap[i].heapIndex;
+				this.q.enqueue(task);
+			}
+		}
 	}
 
 	/**
@@ -46,8 +63,12 @@ public class TaskAllocation{
 	 * 
 	 * @param c
 	 */
-	public void addTask(Task c){
+	public void addTask(Task c){ // TODO: Synchronize queue with heap indexes after insertion to heap.
 		//Your code comes here
+		TaskElement cNode = new TaskElement(c);
+		this.heap.insert(cNode);
+		this.q.enqueue(cNode);
+		synchroniseQueueWithHeapIndices();
 	}
 	
 	/**
@@ -56,9 +77,33 @@ public class TaskAllocation{
 	 * 
 	 * @return the task with the highest priority.
 	 */
-	public Task allocatePriorityTask(){
+	public Task allocatePriorityTask(){ // TODO: synchroniseQueueWithHeapIndices after removal
 		//Your code comes here
-		return null;
+		TaskElement maxTask = this.heap.extractMax();
+		removeTaskFromQueue(maxTask);
+		synchroniseQueueWithHeapIndices();
+		return maxTask.t;
+	}
+
+	private void removeTaskFromQueue(TaskElement task){
+		TaskQueue temporaryQueue = new TaskQueue();
+		TaskElement firstTask = this.q.peek();
+		TaskElement currentTask = firstTask;
+		while (currentTask != null){
+			if (currentTask.t.compareTo(task.t) == 0) {
+				if (currentTask.prev != null){
+					currentTask.prev.next = currentTask.next;
+				}
+				if (currentTask.next != null) {
+					currentTask.next.prev = currentTask.prev;
+				}
+			} else {
+				temporaryQueue.enqueue(currentTask);
+			}
+			currentTask = currentTask.prev;
+		}
+		this.q.first = temporaryQueue.first;
+		this.q.last = temporaryQueue.last;
 	}
 	
 	/**
@@ -67,9 +112,12 @@ public class TaskAllocation{
 	 * 
 	 * @return the task which arrived first to the data structure
 	 */
-	public Task allocateRegularTask(){
+	public Task allocateRegularTask(){ // TODO: synchroniseQueueWithHeapIndices after removal
 		//Your code comes here
-		return null;
+		TaskElement firstTaskQueue = this.q.dequeue();
+		this.heap.remove(firstTaskQueue.heapIndex);
+		synchroniseQueueWithHeapIndices();
+		return firstTaskQueue.t;
 	}
 
 
