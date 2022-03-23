@@ -187,28 +187,33 @@ public class TaskHeap{
 	private void replaceNodeWithUntidy(int i, TaskElement untidyTask){
 		while (i <= size) {
 			Task ancestor = untidyTask.t;
-			if (!bothDescendantsNull(i)) {
+			if (isOnlyChild(2*i)) {
+				untidyTask.heapIndex = 2*i + 1;
+				heap[2*i + 1] = untidyTask;
+				i = size + 1;
+			} else if (bothDescendantsNull(i)){
+				untidyTask.heapIndex = 2 * i;
+				heap[2*i] = untidyTask;
+				i = size + 1;
+			}
+			else {
 				Task leftDescendant = heap[2 * i].t;
 				Task rightDescendant = heap[2 * i + 1].t;
 				if (leftDescendant.compareTo(rightDescendant) >= 0) {
 					if (ancestor.compareTo(leftDescendant) > 0) {
 						untidyTask = replaceNode(2 * i, untidyTask);
 						i = 2 * i;
+					} else {
+						i = 2*i;
 					}
 				} else {
 					if (ancestor.compareTo(rightDescendant) > 0) {
 						untidyTask = replaceNode(2 * i + 1, untidyTask);
 						i = 2 * i + 1;
+					} else {
+						i = 2*i + 1;
 					}
 				}
-			} else if (isOnlyChild(2 * i)) {
-				untidyTask.heapIndex = 2 * i + 1;
-				heap[2 * i + 1] = untidyTask;
-				i = size + 1;
-			} else {
-				untidyTask.heapIndex = i + 1;
-				heap[i + 1] = untidyTask;
-				i = size + 1;
 			}
 		}
 	}
@@ -238,7 +243,7 @@ public class TaskHeap{
 	}
 
 	private boolean bothDescendantsNull(int ancestorIndex) {
-		return 2 * (ancestorIndex) + 1 > size;
+		return 2 * (ancestorIndex) + 1 > size + 1;
 	}
 
 	private boolean isHeapEmpty() {
