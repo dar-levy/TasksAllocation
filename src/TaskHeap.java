@@ -41,6 +41,9 @@ public class TaskHeap{
 		//Your code comes here
 		size = 0;
 		this.heap = new TaskElement[capacity];
+		if (arr.length > capacity) {
+			System.out.println("The input array is too big, max capacity for task heap is 200.");
+		}
 		for (TaskElement taskElement : arr) {
 			if (isHeapEmpty()) {
 				taskElement.heapIndex = 1;
@@ -254,6 +257,16 @@ public class TaskHeap{
 	private boolean isOnlyChild(int descendantIndex) {
 		return ((descendantIndex == size) && (descendantIndex + 1 > size));
 	}
+
+	public void printHeap(){
+			String str = "[";
+			for(int i=1; i<=size; i++){
+				str+= heap[i].t.priority;
+				if(i!=size) str+= ", ";
+			}
+			str+= "]";
+			System.out.println(str);
+	 }
 
 	/**
 	 * A basic test for the heap.
