@@ -34,11 +34,25 @@ public class TaskAllocation{
 		this.q = new TaskQueue();
 		this.heap = new TaskHeap(arr);
 		for (TaskElement task : arr) {
-			for(int i = 1; this.heap.heap[i] != null; i++){
-				if (task.t.compareTo(this.heap.heap[i].t) == 0){
-					task.heapIndex = this.heap.heap[i].heapIndex;
-					this.q.enqueue(task);
-				}
+			assignHeapIndexToTask(task);
+		}
+	}
+
+/*
+	private void synchroniseQueueWithHeapIndices(TaskQueue taskQueue) {
+		TaskElement currentTask = taskQueue.peek();
+		while(currentTask != null) {
+			assignHeapIndexToTask(currentTask);
+			currentTask = currentTask.prev;
+		}
+	}
+*/
+
+	private void assignHeapIndexToTask(TaskElement task) {
+		for(int i = 1; this.heap.heap[i] != null; i++){
+			if (task.t.compareTo(this.heap.heap[i].t) == 0){
+				task.heapIndex = this.heap.heap[i].heapIndex;
+				this.q.enqueue(task);
 			}
 		}
 	}
@@ -66,11 +80,16 @@ public class TaskAllocation{
 	public Task allocatePriorityTask(){
 		//Your code comes here
 		TaskElement maxTask = this.heap.extractMax();
+		removeTaskFromQueue(maxTask);
+		return maxTask.t;
+	}
+
+	private void removeTaskFromQueue(TaskElement task){
 		TaskQueue temporaryQueue = new TaskQueue();
 		TaskElement firstTask = this.q.peek();
 		TaskElement currentTask = firstTask;
 		while (currentTask != null){
-			if (currentTask.t.compareTo(maxTask.t) == 0) {
+			if (currentTask.t.compareTo(task.t) == 0) {
 				if (currentTask.prev != null){
 					currentTask.prev.next = currentTask.next;
 				}
@@ -84,7 +103,6 @@ public class TaskAllocation{
 		}
 		this.q.first = temporaryQueue.first;
 		this.q.last = temporaryQueue.last;
-		return maxTask.t;
 	}
 	
 	/**
