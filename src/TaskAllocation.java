@@ -66,20 +66,25 @@ public class TaskAllocation{
 	public Task allocatePriorityTask(){
 		//Your code comes here
 		TaskElement maxTask = this.heap.extractMax();
+		TaskQueue temporaryQueue = new TaskQueue();
 		TaskElement firstTask = this.q.peek();
 		TaskElement currentTask = firstTask;
-		firstTask.next = currentTask;
 		while (currentTask != null){
 			if (currentTask.t.compareTo(maxTask.t) == 0) {
-				currentTask.prev.next = currentTask.next;
-				currentTask.next.prev = currentTask.prev;
-				this.q.first = firstTask;
-				return currentTask.t;
+				if (currentTask.prev != null){
+					currentTask.prev.next = currentTask.next;
+				}
+				if (currentTask.next != null) {
+					currentTask.next.prev = currentTask.prev;
+				}
+			} else {
+				temporaryQueue.enqueue(currentTask);
 			}
-			currentTask = currentTask.next;
+			currentTask = currentTask.prev;
 		}
-
-		return null;
+		this.q.first = temporaryQueue.first;
+		this.q.last = temporaryQueue.last;
+		return maxTask.t;
 	}
 	
 	/**
