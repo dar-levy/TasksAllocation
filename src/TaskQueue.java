@@ -64,11 +64,9 @@ public class TaskQueue {
 		}
 		else {
 			TaskElement taskBeforeLast = last;
-			taskBeforeLast.prev = last;
 			last = node;
+			taskBeforeLast.prev = last;
 			last.next = taskBeforeLast;
-			taskBeforeLast.next = taskBeforeLast.next.next;
-			taskBeforeLast.next.prev = taskBeforeLast;
 		}
 	}
 	
