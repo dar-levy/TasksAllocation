@@ -243,7 +243,7 @@ public class TaskHeap{
 	}
 
 	private boolean bothDescendantsNull(int ancestorIndex) {
-		return 2 * (ancestorIndex) + 1 > size + 1;
+		return ((heap[2*ancestorIndex] == null) && (heap[2*ancestorIndex + 1] == null));
 	}
 
 	private boolean isHeapEmpty() {
@@ -260,7 +260,7 @@ public class TaskHeap{
 	}
 
 	private boolean isOnlyChild(int descendantIndex) {
-		return ((descendantIndex == size) && (descendantIndex + 1 > size));
+		return ((heap[descendantIndex] != null) && (heap[descendantIndex + 1] == null));
 	}
 
 	public void printHeap(){
