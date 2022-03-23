@@ -52,7 +52,9 @@ public class TaskQueue {
 		//Your code comes here
 		if (last == null){
 			last = new TaskElement(node.t);
+			last.heapIndex = node.heapIndex;
 			first = new TaskElement(node.t);
+			first.heapIndex = node.heapIndex;
 		}
 		else if(last.t.compareTo(first.t) == 0) {
 			first = last;
