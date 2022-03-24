@@ -25,9 +25,9 @@ public class TaskQueue {
 	 */
 	public TaskElement dequeue(){
 		if (first != null){
-			TaskElement firstPreviousNode = first.prev;
+			TaskElement firstNextNode = first.next;
 			TaskElement temporaryFirst = first;
-			first = firstPreviousNode;
+			first = firstNextNode;
 			return temporaryFirst;
 		}
 		return null;
@@ -59,14 +59,14 @@ public class TaskQueue {
 		else if(last.t.compareTo(first.t) == 0) {
 			first = last;
 			last = node;
-			last.next = first;
-			first.prev = last;
+			last.prev = first;
+			first.next = last;
 		}
 		else {
 			TaskElement taskBeforeLast = last;
 			last = node;
-			taskBeforeLast.prev = last;
-			last.next = taskBeforeLast;
+			taskBeforeLast.next = last;
+			last.prev = taskBeforeLast;
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class TaskQueue {
 			System.out.print("(");
 			System.out.print(cur.toString());
 			System.out.print(")");
-			cur = cur.prev;
+			cur = cur.next;
 			System.out.print(" --> ");
 		}
 		System.out.println("null ]");

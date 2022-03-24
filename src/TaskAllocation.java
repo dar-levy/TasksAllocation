@@ -42,7 +42,7 @@ public class TaskAllocation{
 		this.q = new TaskQueue();
 		while(currentTask != null) {
 			assignHeapIndexToTask(currentTask);
-			currentTask = currentTask.prev;
+			currentTask = currentTask.next;
 		}
 	}
 
@@ -99,7 +99,7 @@ public class TaskAllocation{
 			} else {
 				temporaryQueue.enqueue(currentTask);
 			}
-			currentTask = currentTask.prev;
+			currentTask = currentTask.next;
 		}
 		this.q.first = temporaryQueue.first;
 		this.q.last = temporaryQueue.last;
