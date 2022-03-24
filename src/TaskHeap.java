@@ -158,28 +158,32 @@ public class TaskHeap{
 
 	private void percolateDown(int i, TaskElement task){
 		if (isLeaf(i)) { // A leaf ?
+			task.heapIndex = i;
 			heap[i] = task;
 		} else if (isOnlyChild(i)) { // Is only leaf ?
 			if (heap[2*i].t.compareTo(task.t) > 0) {
 				heap[i] = heap[2 * i];
+				task.heapIndex = 2*i;
 				heap[2 * i] = task;
 			} else {
+				task.heapIndex = i;
 				heap[i] = task;
 			}
 		} else if (hasBothDescendants(i)){ // Is node have two descendants ?
-			int biggerDescendantIndex = 2*i;
-			if (heap[2*i].t.compareTo(heap[2*i+1].t) >= 0){
-				biggerDescendantIndex = 2*i;
-			} else {
-				biggerDescendantIndex = 2*i+1;
-			}
+			int biggerDescendantIndex = isBigger(2*i, 2*i+1) ? 2*i : 2*i+1;
 			if (heap[biggerDescendantIndex].t.compareTo(task.t) >= 0) {
 				heap[i] = heap[biggerDescendantIndex];
+				heap[i].heapIndex = i;
 				percolateDown(biggerDescendantIndex, task);
 			} else {
+				task.heapIndex = i;
 				heap[i] = task;
 			}
 		}
+	}
+
+	private boolean isBigger(int leftIndex, int rightIndex){
+		return heap[leftIndex].t.compareTo(heap[rightIndex].t) >= 0;
 	}
 
 	private boolean isHeapEmpty() {
