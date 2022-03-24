@@ -5,7 +5,6 @@
  * 
  * 
  * 
- *
  */
 public class TaskAllocation{
 
@@ -43,7 +42,7 @@ public class TaskAllocation{
 		this.q = new TaskQueue();
 		while(currentTask != null) {
 			assignHeapIndexToTask(currentTask);
-			currentTask = currentTask.prev;
+			currentTask = currentTask.next;
 		}
 	}
 
@@ -63,7 +62,7 @@ public class TaskAllocation{
 	 * 
 	 * @param c
 	 */
-	public void addTask(Task c){ // TODO: Synchronize queue with heap indexes after insertion to heap.
+	public void addTask(Task c){
 		//Your code comes here
 		TaskElement cNode = new TaskElement(c);
 		this.heap.insert(cNode);
@@ -77,7 +76,7 @@ public class TaskAllocation{
 	 * 
 	 * @return the task with the highest priority.
 	 */
-	public Task allocatePriorityTask(){ // TODO: synchroniseQueueWithHeapIndices after removal
+	public Task allocatePriorityTask(){
 		//Your code comes here
 		TaskElement maxTask = this.heap.extractMax();
 		removeTaskFromQueue(maxTask);
@@ -100,7 +99,7 @@ public class TaskAllocation{
 			} else {
 				temporaryQueue.enqueue(currentTask);
 			}
-			currentTask = currentTask.prev;
+			currentTask = currentTask.next;
 		}
 		this.q.first = temporaryQueue.first;
 		this.q.last = temporaryQueue.last;
@@ -112,7 +111,7 @@ public class TaskAllocation{
 	 * 
 	 * @return the task which arrived first to the data structure
 	 */
-	public Task allocateRegularTask(){ // TODO: synchroniseQueueWithHeapIndices after removal
+	public Task allocateRegularTask(){
 		//Your code comes here
 		TaskElement firstTaskQueue = this.q.dequeue();
 		this.heap.remove(firstTaskQueue.heapIndex);
