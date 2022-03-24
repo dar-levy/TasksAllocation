@@ -85,7 +85,7 @@ public class TaskQueue {
 			System.out.print("(");
 			System.out.print(cur.toString());
 			System.out.print(")");
-			cur = cur.next;
+			cur = cur.prev;
 			System.out.print(" --> ");
 		}
 		System.out.println("null ]");

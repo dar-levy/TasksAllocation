@@ -149,6 +149,8 @@ public class TaskHeap{
 				if (heap[ancestorIndex].t.compareTo(newTask.t) < 0){
 					switchNodes(ancestorIndex, i);
 					i = ancestorIndex;
+				} else {
+					i = 0;
 				}
 			}
 		}
