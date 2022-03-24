@@ -170,8 +170,8 @@ public class TaskHeap{
 				heap[i] = task;
 			}
 		} else if (hasBothDescendants(i)){ // Is node have two descendants ?
-			int biggerDescendantIndex = isBigger(2*i, 2*i+1) ? 2*i : 2*i+1;
-			if (heap[biggerDescendantIndex].t.compareTo(task.t) >= 0) {
+			int biggerDescendantIndex = isBigger(heap[2*i], heap[2*i+1]) ? 2*i : 2*i+1;
+			if (isBigger(heap[biggerDescendantIndex], task)) {
 				heap[i] = heap[biggerDescendantIndex];
 				heap[i].heapIndex = i;
 				percolateDown(biggerDescendantIndex, task);
@@ -182,8 +182,8 @@ public class TaskHeap{
 		}
 	}
 
-	private boolean isBigger(int leftIndex, int rightIndex){
-		return heap[leftIndex].t.compareTo(heap[rightIndex].t) >= 0;
+	private boolean isBigger(TaskElement leftDescendant, TaskElement rightDescendant){
+		return leftDescendant.t.compareTo(rightDescendant.t) >= 0;
 	}
 
 	private boolean isHeapEmpty() {
