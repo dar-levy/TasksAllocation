@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 /**
  * A heap, implemented as an array.
@@ -37,7 +38,7 @@ public class TaskHeap{
 	 * In this function you may use loops.
 	 * 
 	 */
-	public TaskHeap(TaskElement[] arr) {
+	/*public TaskHeap(TaskElement[] arr) {
 		//Your code comes here
 		size = 0;
 		this.heap = new TaskElement[capacity];
@@ -48,7 +49,6 @@ public class TaskHeap{
 			if (isHeapEmpty()) {
 				taskElement.heapIndex = 1;
 				heap[1] = taskElement;
-				size++;
 			}
 			else {
 				TaskElement maxTask = heap[1];
@@ -56,11 +56,22 @@ public class TaskHeap{
 				heap[1].heapIndex = 1;
 				TaskElement untidyTask = maxTask.t.compareTo(taskElement.t) >= 0 ? taskElement : maxTask;
 				percolateDown(untidyTask, 1);
-				size++;
 			}
+			size++;
+		}
+	}*/
+
+	public TaskHeap(TaskElement[] arr){
+		size = arr.length;
+		heap = Arrays.copyOf(arr, 200);
+		this.heap[size] = heap[0];
+		this.heap[0] = null;
+		int nodesCount = size/2;
+		for (int i = nodesCount; i > 0; i--){
+			percolateDown(i, heap[i]);
 		}
 	}
-	
+
     /**
      * Returns the size of the heap.
      *
@@ -101,12 +112,12 @@ public class TaskHeap{
 	 * 
 	 * @return the element which wraps the task with maximal priority.
 	 */
-    public TaskElement extractMax() {
+    /*public TaskElement extractMax() {
 		//Your code comes here
 		TaskElement maxTaskElement = heap[1];
 		remove(1);
 		return maxTaskElement;
-    }
+    }*/
     
     /**
      * Removes the element located at the given index.
@@ -117,7 +128,7 @@ public class TaskHeap{
 	 * 		 No matter how you choose to implement it, you need to consider the different possible edge cases.
      * @param index
      */
-    public void remove(int index){
+    /*public void remove(int index){
         //Your code comes here
 		int i = index;
 		if(isHeapEmpty()) {
@@ -134,7 +145,7 @@ public class TaskHeap{
 				percolateUp(heap[i]);
 			}
 		}
-    }
+    }*/
 
 	private int trySwitchAncestorWithDescendant(int ancestorIndex, int descendantIndex) {
 		if (heap[ancestorIndex].t.compareTo(heap[descendantIndex].t) < 0){
@@ -175,14 +186,39 @@ public class TaskHeap{
 		}
 	}
 
-    private void percolateDown(TaskElement untidyTask, int index) {
+	private void percolateDown(int i, TaskElement task){
+		if (2*i > size) { // A leaf ?
+			heap[i] = task;
+		} else if (2*i == size) { // Is only leaf ?
+			if (heap[2*i].t.compareTo(task.t) > 0) {
+				heap[i] = heap[2 * i];
+				heap[2 * i] = task;
+			} else {
+				heap[i] = task;
+			}
+		} else if (2*i < size){ // Is node have two descendants ?
+			int biggerDescendantIndex = 2*i;
+			if (heap[2*i].t.compareTo(heap[2*i+1].t) >= 0){
+				biggerDescendantIndex = 2*i;
+			} else {
+				biggerDescendantIndex = 2*i+1;
+			}
+			if (heap[biggerDescendantIndex].t.compareTo(task.t) >= 0) {
+				heap[i] = heap[biggerDescendantIndex];
+				percolateDown(biggerDescendantIndex, task);
+			} else {
+				heap[i] = task;
+			}
+		}
+	}
+    /*private void percolateDown(TaskElement untidyTask, int index) {
 		int i = index;
 		if (untidyTask != null) {
 			replaceNodeWithUntidy(i, untidyTask);
 		} else {
 			switchAncestorWithDescendant(index);
 		}
-	}
+	}*/
 
 	private void replaceNodeWithUntidy(int i, TaskElement untidyTask){
 		while (i <= size) {
@@ -291,9 +327,13 @@ public class TaskHeap{
         	Task a = new Task(10, "Add a new feature");
         	Task b = new Task(3, "Code Review");
         	Task c = new Task(2, "Move to the new Kafka server");
-        	TaskElement [] arr = {new TaskElement(a), new TaskElement(b), new TaskElement(c)};
+        	Task d = new Task(1, "aba");
+        	Task e = new Task(0, "baba");
+        	Task f = new Task(5, "caca");
+        	Task g = new Task(7, "dada");
+        	TaskElement [] arr = {new TaskElement(a), new TaskElement(b), new TaskElement(c), new TaskElement(d), new TaskElement(e), new TaskElement(f), new TaskElement(g)};
         	TaskHeap heap = new TaskHeap(arr);
-        	System.out.println(heap.findMax());
+/*        	System.out.println(heap.findMax());
         	
         	Task d = new Task(100, "Solve a problem in production");
         	heap.insert(new TaskElement(d));
@@ -302,6 +342,6 @@ public class TaskHeap{
          	System.out.println(heap.extractMax());
         	System.out.println(heap.extractMax());
             System.out.println(heap.extractMax());
-        	System.out.println(heap.extractMax());
+        	System.out.println(heap.extractMax());*/
         }
 }

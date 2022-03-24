@@ -1,3 +1,4 @@
+/*
 public class Tester {
 
     public static void main(String[] args){
@@ -71,7 +72,8 @@ public class Tester {
         hp1.remove(2);
         hp1.printHeap();                          // expected output:[9, 3, 5, 1, 0, 2]
 
-        /* Extra functions for testing:
+        */
+/* Extra functions for testing:
          *
          * TaskQueue:
          *
@@ -100,7 +102,9 @@ public class Tester {
          *		str+= "]";
          *		System.out.println(str);
          *	}
-         */
+         *//*
+
     }
 }
 
+*/
