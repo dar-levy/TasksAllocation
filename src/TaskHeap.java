@@ -211,16 +211,6 @@ public class TaskHeap{
 		return 2*nodeIndex < size;
 	}
 
-	public void printHeap(){
-			String str = "[";
-			for(int i=1; i<=size; i++){
-				str+= heap[i].t.priority;
-				if(i!=size) str+= ", ";
-			}
-			str+= "]";
-			System.out.println(str);
-	 }
-
 	/**
 	 * A basic test for the heap.
 	 * You should be able to run this before implementing the queue.

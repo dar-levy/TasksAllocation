@@ -77,19 +77,6 @@ public class TaskQueue {
 	public boolean isEmpty() {
 		return (first==null);
 	}
-
-	public void printQueue(){
-		System.out.print("[ ");
-		TaskElement cur = first;
-		while (cur != null){
-			System.out.print("(");
-			System.out.print(cur.toString());
-			System.out.print(")");
-			cur = cur.next;
-			System.out.print(" --> ");
-		}
-		System.out.println("null ]");
-	}
 }
 
 
