@@ -38,29 +38,6 @@ public class TaskHeap{
 	 * In this function you may use loops.
 	 * 
 	 */
-	/*public TaskHeap(TaskElement[] arr) {
-		//Your code comes here
-		size = 0;
-		this.heap = new TaskElement[capacity];
-		if (arr.length > capacity) {
-			System.out.println("The input array is too big, max capacity for task heap is 200.");
-		}
-		for (TaskElement taskElement : arr) {
-			if (isHeapEmpty()) {
-				taskElement.heapIndex = 1;
-				heap[1] = taskElement;
-			}
-			else {
-				TaskElement maxTask = heap[1];
-				heap[1] = maxTask.t.compareTo(taskElement.t) >= 0 ? maxTask : taskElement;
-				heap[1].heapIndex = 1;
-				TaskElement untidyTask = maxTask.t.compareTo(taskElement.t) >= 0 ? taskElement : maxTask;
-				percolateDown(untidyTask, 1);
-			}
-			size++;
-		}
-	}*/
-
 	public TaskHeap(TaskElement[] arr){
 		size = arr.length;
 		heap = Arrays.copyOf(arr, 200);
@@ -146,15 +123,6 @@ public class TaskHeap{
 			}
 		}
     }
-
-	private int trySwitchAncestorWithDescendant(int ancestorIndex, int descendantIndex) {
-		if (heap[ancestorIndex].t.compareTo(heap[descendantIndex].t) < 0){
-			switchNodes(ancestorIndex, descendantIndex);
-			 return descendantIndex;
-		} else {
-			return size;
-		}
-	}
 
 	private void assignLastTaskElementToIndex(int index) {
 		heap[index] = heap[size];
